@@ -32,8 +32,7 @@ Tips
 
 How to Submit a Pull Request
 ------------------------
-From you repo page
-1. Click Pull Request
+1. From your repo page, click Pull Request
 2. Click New Pull Request
 3. Select "Base fork:GreedyWolf/tetris  Base:your_handle" ==> "Head fork:your_handle/tetris compare:master" 
 4. Leave detail comments on changes made by pull request
