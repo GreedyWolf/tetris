@@ -17,6 +17,19 @@
 */
 function drawGrid(x,y){
   //Start here...
+  var rows = x;
+  var columns = y;
+
+  //Create table rows
+  for(var i = 0 ; i < rows ; i++) {
+    $('#playfield').append("<tr class='" + i + "'></tr>");
+
+  }  
+  //create table columns
+  for(var j = 0; j < columns; j++) {
+    $('tr').append("<td class='" + j + "'></td>");
+  }
+  
 };
 
 /*
@@ -29,3 +42,7 @@ function fillCells(array, color){
   //Start here...
 };
 //hello
+
+$(document).ready(function(){
+  drawGrid(22,10);
+});
