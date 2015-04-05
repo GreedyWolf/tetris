@@ -40,9 +40,24 @@ function drawGrid(x,y){
 */
 function fillCells(array, color){
   //Start here...
+  var coordinates = array;
+  var color = color;
+
+  for( var i = 0 ; i < coordinates.length ; i++) {
+    $('tr.' + coordinates[i].x + '>' + 'td.' + coordinates[i].y).attr("bgcolor",color);
+  }
+
 };
 //hello
 
+var input = [
+  { x : 1, y : 1 },
+  { x : 1, y : 2 }
+];
+
+var color = "black";
+
 $(document).ready(function(){
   drawGrid(22,10);
+  fillCells(input, color);
 });
