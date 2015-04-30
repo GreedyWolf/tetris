@@ -27,7 +27,8 @@ function drawGrid(x,y){
   }  
   //create table columns
   for(var j = 0; j < columns; j++) {
-    $('tr').append("<td class='" + j + "'></td>");
+    var td = $('<td>').addClass(''+j).attr('bgcolor', 'white')
+    $('tr').append(td);
   }  
   var coordinate_Limit = {
     x : rows,
@@ -238,7 +239,7 @@ function generate_Shape() {
 }
 
 //Generate block coordinate base on shape, and current coodirnate
-function generate_Block (shape,current) {
+function generate_Block () {
   if(shape == "square") { return Square(current);}
 
   else if(shape == "left_l") { return left_L(current);}
@@ -267,24 +268,29 @@ function generate_Block (shape,current) {
   else if(shape == "right_zz2"){return right_ZZ2(current);}
 }
 //fill cells depending on shape
-function generate(shape,current) {
+function generate() {
   var Block = generate_Block(shape,current);
   fillCells(Block,"black");
   return Block;
 }
 //de fill cells depending on shape
-function degenerate(shape,current) {
+function degenerate() {
   var Block = generate_Block(shape,current);
   fillCells(Block,"white");
   return Block;
 }
 
 // check validity of move
-function checkValid (shape,current) {
+function checkValid () {
   var check = true;
   var Block = generate_Block(shape,current);
   for ( var i = 0; i < Block.length; i++) {
-    if(Block[i].x >21 || Block[i].y < 0 || Block[i].y > 9) {
+    var bClass = Block[i].x;
+    var bId = Block[i].y;
+    var cell = $('tr.'+bClass+'>td.'+bId);
+    var color = cell.attr('bgcolor');
+    console.log(color);
+    if(color !== 'white') {
       check = false;
       break;
     }
@@ -292,43 +298,46 @@ function checkValid (shape,current) {
   return check;
 }
 
-function moveDown(shape,current) {
+function moveDown() {
+    Block = degenerate(shape,current);
     current.x++;
     if(checkValid(shape,current)) {
       current.x--;
-      Block = degenerate(shape,current);
       current.x++;
       Block = generate(shape,current);
     }else {
         current.x--;
+      Block = generate(shape,current);
     }
 }
-function moveLeft(shape,current) {
+function moveLeft() {
+      Block = degenerate(shape,current);
   current.y--;
     if(checkValid(shape,current)) {
       current.y++;
-      Block = degenerate(shape,current);
       current.y--;
       Block = generate(shape,current);
     }else {
         current.y++;
+      Block = generate(shape,current);
     }
 }
-function moveRight(shape,current) {
+function moveRight() {
+      Block = degenerate(shape,current);
    current.y++;
     if(checkValid(shape,current)) {
       current.y--;
-      Block = degenerate(shape,current);
       fillCells(Block,"white");
       current.y++;
       Block = generate(shape,current);
       fillCells(Block,"black");
     }else {
+      Block = generate(shape,current);
         current.y--;
     }
 }
 
-function rotateBlock(shape,current) {
+function rotateBlock() {
     var Block = generate_Block(shape,current);
     fillCells(Block,"white");
     if(shape == "square") {
@@ -415,32 +424,46 @@ function rotateBlock(shape,current) {
     return shape;
   
 }
-function recurrentDown(shape,current) {
+function isBottom() {
+  var Block = generate_Block(shape,current);
+  for(var i = 0; i < Block.length; i++) {
+    if(Block[i].x === 21) {
+      return true;
+    }
+  }
+  return false;
+}
+
+function recurrentDown() {
   var Block = generate(shape,current);
   var home = { x : 0 , y : 4};
   var start = setInterval( function(){
     moveDown(shape,current);
-    if(checkValid(shape,current)) {
-      clearInterval(start);
-      shape = generate_Shape();
-      current = home ;
-      recurrentDown(shape,current);
+  console.log('hi')
+    if(isBottom(shape,current)){
+     clearInterval(start);
+     init();
     }
   },500)
 }
+
+function init() {
+  current = { x : 0, y : 4 };
+  home = { x : 0, y : 4 };
+  shape = generate_Shape();
+  Block = generate_Block(shape,current);
+  fillCells(Block, "black");
+  recurrentDown(shape,current);
+}
+
+var current, home, shape, Block;
 
 $(document).ready(function(){
 
   //Create Gridbl
   drawGrid(22,10);
   //Create block, save initial block coordinate
-  var current = { x : 0, y : 4 };
-  var home = { x : 0, y : 4 };
-  var shape = generate_Shape();
-  var Block = generate_Block(shape,current);
-  fillCells(Block, "black");
-  recurrentDown(shape,current);
-
+  init();
 
 
 
