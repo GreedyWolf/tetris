@@ -15,6 +15,7 @@
                    <td class='3'></td>
                  </tr>
 */
+
 function drawGrid(x,y){
   //Start here...
   var rows = x;
@@ -28,6 +29,11 @@ function drawGrid(x,y){
   for(var j = 0; j < columns; j++) {
     $('tr').append("<td class='" + j + "'></td>");
   }  
+  var coordinate_Limit = {
+    x : rows,
+    y : columns
+  };
+  return coordinate_Limit;
 };
 
 /*
@@ -45,15 +51,6 @@ function fillCells(array, color){
     $('tr.' + coordinates[i].x + '>' + 'td.' + coordinates[i].y).attr("bgcolor",color);
   }
 };
-
-setOrigin(0,4);
-//block original coordinate
-function setOrigin(x,y) {
-  var origin = { x : "", y : "" };
-  origin.x = x;
-  origin.y = y;
-}
-
 
 /*
   Input : current coordinates
@@ -269,110 +266,72 @@ function generate_Block (shape,current) {
   else if(shape == "right_zz"){return right_ZZ(current);}
   else if(shape == "right_zz2"){return right_ZZ2(current);}
 }
-
-// check left boundary
-function left_bound_check (coordinate) {
-  var check = true;
-  for( var i = 0; i < coordinate.length ; i++) {
-    if(coordinate[i].y < 1) {
-      return check = false;
-      break;
-    };
-  }
-  return check;
-};
-
-//check right boundary
-function right_bound_check (coordinate) {
-  var check = true;
-  for( var i = 0; i < coordinate.length ; i++) {
-    if(coordinate[i].y > 8 ) {
-      return check = false;
-      break;
-    }
-  }
-  return check;
-}
-
-//check lower boundary
-function lower_bound_check (coordinate) {
-  var check = true;
-  for( var i = 0; i < coordinate.length ; i++) {
-    if(coordinate[i].x > 20) {
-      return check = false;
-      break;
-    }
-  }  
-  return check;
-}
-
-$(document).ready(function(){
-
-  //Create Gridbl
-  drawGrid(22,10);
-  //Create block, save initial block coordinate
-  var current = { x : 0, y : 4 };
-  var shape = generate_Shape();
+//fill cells depending on shape
+function generate(shape,current) {
   var Block = generate_Block(shape,current);
-  fillCells(Block, "black");
+  fillCells(Block,"black");
+  return Block;
+}
+//de fill cells depending on shape
+function degenerate(shape,current) {
+  var Block = generate_Block(shape,current);
+  fillCells(Block,"white");
+  return Block;
+}
 
-setInterval(function(){
-    fillCells(Block,"white");
+// check validity of move
+function checkValid (shape,current) {
+  var check = true;
+  var Block = generate_Block(shape,current);
+  for ( var i = 0; i < Block.length; i++) {
+    if(Block[i].x >21 || Block[i].y < 0 || Block[i].y > 9) {
+      check = false;
+      break;
+    }
+  }
+  return check;
+}
+
+function moveDown(shape,current) {
     current.x++;
-    Block = generate_Block(shape,current);
-    fillCells(Block,"black");
+    if(checkValid(shape,current)) {
+      current.x--;
+      Block = degenerate(shape,current);
+      current.x++;
+      Block = generate(shape,current);
+    }else {
+        current.x--;
+    }
+}
+function moveLeft(shape,current) {
+  current.y--;
+    if(checkValid(shape,current)) {
+      current.y++;
+      Block = degenerate(shape,current);
+      current.y--;
+      Block = generate(shape,current);
+    }else {
+        current.y++;
+    }
+}
+function moveRight(shape,current) {
+   current.y++;
+    if(checkValid(shape,current)) {
+      current.y--;
+      Block = degenerate(shape,current);
+      fillCells(Block,"white");
+      current.y++;
+      Block = generate(shape,current);
+      fillCells(Block,"black");
+    }else {
+        current.y--;
+    }
+}
 
-},500);
-
-$(document).keydown(function(e){
-
-/*
+function rotateBlock(shape,current) {
+    var Block = generate_Block(shape,current);
     fillCells(Block,"white");
-    current.x++;
-    Block = generate_Block(shape,current);
-    fillCells(Block,"black"); 
- */
-
-
-  //move down
-  if (e.keyCode == 40) {
-    if(lower_bound_check(Block)){
-    fillCells(Block,"white");
-    current.x++;
-    Block = generate_Block(shape,current);
-    fillCells(Block,"black"); 
-    } 
-  };
-
-
-
-  //move left
-  if (e.keyCode == 37) {
-    if(left_bound_check(Block)){
-    fillCells(Block,"white");
-    current.y--;
-    Block = generate_Block(shape,current);
-    fillCells(Block,"black"); 
-    } 
-  };
-
-  //move right
-  if (e.keyCode == 39) {
-    if(right_bound_check(Block)){
-    fillCells(Block,"white");
-    current.y++;
-    Block = generate_Block(shape,current);
-    fillCells(Block,"black"); 
-    } 
-  };
-  
-
-
-  //rotate
-  if (e.keyCode == 38) {
-
     if(shape == "square") {
-
     }else {
       fillCells(Block,"white");
     }
@@ -453,6 +412,68 @@ $(document).keydown(function(e){
       Block=generate_Block(shape,current);
       fillCells(Block,"black");
     }
+    return shape;
+  
+}
+function recurrentDown(shape,current) {
+  var Block = generate(shape,current);
+  var home = { x : 0 , y : 4};
+  var start = setInterval( function(){
+    moveDown(shape,current);
+    if(checkValid(shape,current)) {
+      clearInterval(start);
+      shape = generate_Shape();
+      current = home ;
+      recurrentDown(shape,current);
+    }
+  },500)
+}
+
+$(document).ready(function(){
+
+  //Create Gridbl
+  drawGrid(22,10);
+  //Create block, save initial block coordinate
+  var current = { x : 0, y : 4 };
+  var home = { x : 0, y : 4 };
+  var shape = generate_Shape();
+  var Block = generate_Block(shape,current);
+  fillCells(Block, "black");
+  recurrentDown(shape,current);
+
+
+
+
+$(document).keydown(function(e){
+
+/*
+    fillCells(Block,"white");
+    current.x++;
+    Block = generate_Block(shape,current);
+    fillCells(Block,"black"); 
+ */
+
+
+  //move down
+  if (e.keyCode == 40) {
+    moveDown(shape,current);
+  };
+
+  //move left
+  if (e.keyCode == 37) {
+    moveLeft(shape,current);
+  };
+  //move right
+  if (e.keyCode == 39) {
+   moveRight(shape,current);
+  };
+  
+
+
+  //rotate
+  if (e.keyCode == 38) {
+    shape = rotateBlock(shape,current);
+
 }
 
 });
