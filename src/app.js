@@ -339,88 +339,204 @@ function moveRight() {
 
 function rotateBlock() {
     var Block = generate_Block(shape,current);
-    fillCells(Block,"white");
+    
+
     if(shape == "square") {
     }else {
       fillCells(Block,"white");
     }
     if(shape == "left_l") {
       shape="left_l2";
-      Block=generate_Block(shape,current);
-      fillCells(Block,"black");
+      if(checkValid(shape,current)){
+        Block=generate_Block(shape,current);
+        fillCells(Block,"black");
+      }else{
+        shape == "left_l";
+        Block = generate_Block(shape,current);
+        fillCells(Block,"black");
+      }
     }else if (shape == "left_l2") {
       shape="left_l3";
-      Block=generate_Block(shape,current);
-      fillCells(Block,"black");
+      if(checkValid(shape,current)){
+        Block=generate_Block(shape,current);
+        fillCells(Block,"black");
+      }else{
+        shape="left_l2";
+        Block=generate_Block(shape,current);
+        fillCells(Block,"black");
+      }
     }else if (shape == "left_l3") {
       shape="left_l4";
-      Block=generate_Block(shape,current);
-      fillCells(Block,"black");
+      if(checkValid(shape,current)){
+        Block=generate_Block(shape,current);
+        fillCells(Block,"black");
+      }else{
+        shape="left_l3";
+        Block=generate_Block(shape,current);
+        fillCells(Block,"black");
+      }
+
     }else if (shape == "left_l4") {
       shape="left_l";
-      Block=generate_Block(shape,current);
-      fillCells(Block,"black");
+      if(checkValid(shape,current)){
+        Block=generate_Block(shape,current);
+        fillCells(Block,"black");
+      }else{
+        shape="left_l4";
+        fillCells(Block,"black");
+      }
     }else if(shape == "right_l") {
       shape="right_l2";
-      Block=generate_Block(shape,current);
-      fillCells(Block,"black");
+      if(checkValid(shape,current)) {
+        Block=generate_Block(shape,current);
+        fillCells(Block,"black");
+      }else{
+        shape="right_l";
+        Block=generate_Block(shape,current);
+        fillCells(Block,"black");
+      }
     }else if (shape == "right_l2") {
       shape="right_l3";
-      Block=generate_Block(shape,current);
-      fillCells(Block,"black");
+      if(checkValid(shape,current)){
+        Block=generate_Block(shape,current);
+        fillCells(Block,"black");
+      }else{
+        shape="right_l2";
+        Block=generate_Block(shape,current);
+        fillCells(Block,"black");
+      }
     }else if (shape == "right_l3") {
       shape="right_l4";
-      Block=generate_Block(shape,current);
-      fillCells(Block,"black");
+      if(checkValid(shape,current)){
+        Block=generate_Block(shape,current);
+        fillCells(Block,"black");
+      }else{
+        shape ="right_l3";
+        Block=generate_Block(shape,current);
+        fillCells(Block,"black");
+      }
     }else if (shape == "right_l4") {
       shape="right_l";
+      if(checkValid(shape,current)){
       Block=generate_Block(shape,current);
       fillCells(Block,"black");
+      }
+      else{
+        shape="right_l4";
+        Block=generate_Block(shape,current);
+        fillCells(Block,"black");
+      }
     }else if(shape == "top") {
       shape="top2";
-      Block=generate_Block(shape,current);
-      fillCells(Block,"black");
+      if(checkValid(shape,current)){
+        Block=generate_Block(shape,current);
+        fillCells(Block,"black");
+      }
+      else{
+        shape="top";
+        Block=generate_Block(shape,current);
+        fillCells(Block,"black");
+      }
     }else if (shape == "top2") {
       shape="top3";
-      Block=generate_Block(shape,current);
-      fillCells(Block,"black");
+      if(checkValid(shape,current)){
+        Block=generate_Block(shape,current);
+        fillCells(Block,"black");
+      }
+      else{
+        shape="top2";
+        Block=generate_Block(shape,current);
+        fillCells(Block,"black");
+      }
     }else if (shape == "top3") {
       shape="top4";
-      Block=generate_Block(shape,current);
-      fillCells(Block,"black");
+      if(checkValid(shape,current)){
+        Block=generate_Block(shape,current);
+        fillCells(Block,"black");
+      }
+      else{
+        shape="top3";
+        Block=generate_Block(shape,current);
+        fillCells(Block,"black");
+      }
     }else if (shape == "top4") {
       shape="top";
-      Block=generate_Block(shape,current);
-      fillCells(Block,"black");
-    }else if (shape == "top4") {
-      shape="top";
-      Block=generate_Block(shape,current);
-      fillCells(Block,"black");
+      if(checkValid(shape,current)){
+        Block=generate_Block(shape,current);
+        fillCells(Block,"black");
+      }
+      else{
+        shape="top4";
+        Block=generate_Block(shape,current);
+        fillCells(Block,"black");
+      }
     }else if(shape == "bar") {
       shape="bar2";
-      Block=generate_Block(shape,current);
-      fillCells(Block,"black");
+      if(checkValid(shape,current)){
+        Block=generate_Block(shape,current);
+        fillCells(Block,"black");
+      }
+      else{
+        shape="bar";
+        Block=generate_Block(shape,current);
+        fillCells(Block,"black");
+      }
     }else if (shape == "bar2") {
       shape="bar";
-      Block=generate_Block(shape,current);
-      fillCells(Block,"black");
+      if(checkValid(shape,current)){
+        Block=generate_Block(shape,current);
+        fillCells(Block,"black");
+      }
+      else{
+        shape="bar2";
+        Block=generate_Block(shape,current);
+        fillCells(Block,"black");
+      }
     }else if (shape == "left_zz") {
       shape="left_zz2";
-      Block=generate_Block(shape,current);
-      fillCells(Block,"black");
+      if(checkValid(shape,current)){
+        Block=generate_Block(shape,current);
+        fillCells(Block,"black");
+      }
+      else{
+        shape="left_zz";
+        Block=generate_Block(shape,current);
+        fillCells(Block,"black");
+      }
     }else if (shape == "left_zz2") {
       shape="left_zz";
-      Block=generate_Block(shape,current);
-      fillCells(Block,"black");
+      if(checkValid(shape,current)){
+        Block=generate_Block(shape,current);
+        fillCells(Block,"black");
+      }
+      else{
+        shape="left_zz2";
+        Block=generate_Block(shape,current);
+        fillCells(Block,"black");
+      }
     }else if(shape == "right_zz") {
-      shape="right_zz2";
-      Block=generate_Block(shape,current);
-      fillCells(Block,"black");
-    }else if (shape == "right_zz2") {
-      shape="right_zz";
-      Block=generate_Block(shape,current);
-      fillCells(Block,"black");
-    }
+        shape="right_zz2";
+        if(checkValid(shape,current)){
+          Block=generate_Block(shape,current);
+          fillCells(Block,"black");
+        }
+        else{
+          shape="right_zz2";
+          Block=generate_Block(shape,current);
+          fillCells(Block,"black");
+        }
+      }else if (shape == "right_zz2") {
+        shape="right_zz";
+        if(checkValid(shape,current)){
+        Block=generate_Block(shape,current);
+        fillCells(Block,"black");
+      }
+      else{
+        shape="right_zz";
+        Block=generate_Block(shape,current);
+        fillCells(Block,"black");
+      }
+      }
     return shape;
   
 }
