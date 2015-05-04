@@ -305,14 +305,11 @@ function checkBelow() {
   var compare_pile = [];
   var edge = [];
 
-  for( var i = 0 ; i<9 ; i++){
+  for( var i = 0 ; i<10 ; i++){
     for( var j = 0; j<Block.length;j++){
       if(Block[j].y === i ) {
         compare_pile.push(Block[j]);
       }
-    }
-    if(compare_pile[0]) {
-      //console.log(compare_pile);
     }
     var high=compare_pile[0];
     for( var k = 0; k<compare_pile.length;k++){
@@ -356,29 +353,23 @@ function moveDown() {
     }
 }
 function moveLeft() {
-      Block = degenerate(shape,current);
-  current.y--;
+    Block = degenerate(shape,current);
+    current.y--;
     if(checkValid(shape,current)) {
-      current.y++;
-      current.y--;
       Block = generate(shape,current);
     }else {
-        current.y++;
+      current.y++;
       Block = generate(shape,current);
     }
 }
 function moveRight() {
-      Block = degenerate(shape,current);
-   current.y++;
+    Block = degenerate(shape,current);
+    current.y++;
     if(checkValid(shape,current)) {
-      current.y--;
-      fillCells(Block,"white");
-      current.y++;
       Block = generate(shape,current);
-      fillCells(Block,"black");
     }else {
+      current.y--;
       Block = generate(shape,current);
-        current.y--;
     }
 }
 
@@ -598,32 +589,58 @@ function isBottom() {
 function checkRow() {
   var check = 0;
   for(var x=0;x <22;x++){
-    for(var y=0; y<9;y++){
-      var cell = $('tr.'+x+'>td.'+y);
-      var color = cell.attr('bgcolor');
-      if(color === "black"){
+    for(var y=0; y<10;y++){
+      if(checkCell(x,y)){
         check++;
       }
-      if(check ===10){
-        console.log(check);
-        check = 0;
+      if(check === 10) {
+        clearRow(x);
       }
-    check = 0;
     }
+    check = 0;
+  }
+}
+function clearRow(row) {
+  coordinate = [];
+  for(var i = 0 ; i < 10 ; i++){
+      coordinate.push( { x : row, y : i})
+      fillCells(coordinate,("white"));
+      for(var j = row-1; j > 0; j--){
+        if(checkCell(j,i)){
+          coordinate.push({ x : j, y : i})
+          fillCells(coordinate,"white");
+          coordinate=[];
+          coordinate.push({ x : j+1, y : i});
+          fillCells(coordinate,"black");
+          coordinate=[];
+        }
+      }
   }
 
+}
+
+function checkCell(x,y){
+  var check = false;
+  var cell = $('tr.'+x+'>td.'+y);
+  var color = cell.attr('bgcolor');
+  if(color === "black"){
+    check = true;
+    return check;
+  }
+  return check;
+  
 }
 
 function recurrentDown() {
   var Block = generate(shape,current);
   var home = { x : 0 , y : 4};
   var start = setInterval( function(){
-    checkRow();
     moveDown(shape,current);
   //console.log('hi')
     if(isBottom(shape,current)||!checkBelow()){
-     clearInterval(start);
-     init();
+      clearInterval(start);
+      checkRow();
+      init();
     }
   },500)
 }
