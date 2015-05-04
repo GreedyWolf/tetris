@@ -289,7 +289,7 @@ function checkValid () {
     var bId = Block[i].y;
     var cell = $('tr.'+bClass+'>td.'+bId);
     var color = cell.attr('bgcolor');
-    console.log(color);
+    //console.log(color);
     if(color !== 'white') {
       check = false;
       break;
@@ -297,6 +297,51 @@ function checkValid () {
   }
   return check;
 }
+
+function checkBelow() {
+  
+  var check = true;
+  var Block = generate_Block(shape,current);
+  var compare_pile = [];
+  var edge = [];
+
+  for( var i = 0 ; i<9 ; i++){
+    for( var j = 0; j<Block.length;j++){
+      if(Block[j].y === i ) {
+        compare_pile.push(Block[j]);
+      }
+    }
+    if(compare_pile[0]) {
+      //console.log(compare_pile);
+    }
+    var high=compare_pile[0];
+    for( var k = 0; k<compare_pile.length;k++){
+      if(compare_pile[k].x>high.x) {
+        high=compare_pile[k];
+      }
+    }
+    if(compare_pile[0]){
+      edge.push(high);
+    }
+    high ="";
+    compare_pile =[];
+  }
+  for (var i = 0; i < edge.length; i++) {
+    var bClass = edge[i].x+1;
+    var bId = edge[i].y;
+    var cell = $('tr.'+bClass+'>td.'+bId);
+    var color = cell.attr('bgcolor');
+    if(color === 'black') {
+      //console.log(color);
+      check = false;
+      break;
+    }
+  }
+  return check;
+ 
+
+}
+
 
 function moveDown() {
     Block = degenerate(shape,current);
@@ -550,19 +595,38 @@ function isBottom() {
   return false;
 }
 
+function checkRow() {
+  var check = 0;
+  for(var x=0;x <22;x++){
+    for(var y=0; y<9;y++){
+      var cell = $('tr.'+x+'>td.'+y);
+      var color = cell.attr('bgcolor');
+      if(color === "black"){
+        check++;
+      }
+      if(check ===10){
+        console.log(check);
+        check = 0;
+      }
+    check = 0;
+    }
+  }
+
+}
+
 function recurrentDown() {
   var Block = generate(shape,current);
   var home = { x : 0 , y : 4};
   var start = setInterval( function(){
+    checkRow();
     moveDown(shape,current);
-  console.log('hi')
-    if(isBottom(shape,current)){
+  //console.log('hi')
+    if(isBottom(shape,current)||!checkBelow()){
      clearInterval(start);
      init();
     }
   },500)
 }
-
 function init() {
   current = { x : 0, y : 4 };
   home = { x : 0, y : 4 };
@@ -580,8 +644,6 @@ $(document).ready(function(){
   drawGrid(22,10);
   //Create block, save initial block coordinate
   init();
-
-
 
 $(document).keydown(function(e){
 
